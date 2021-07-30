@@ -156,6 +156,7 @@ function viewArchived(){
   document.querySelector("#app").innerHTML = cards;
 }
 
+//Open the edit modal note.
 const editNote = (noteId) => {
   const editNoteModal = document.querySelector('#editNoteModal');
     const noteDetails = noteData[noteId];
@@ -166,6 +167,7 @@ const editNote = (noteId) => {
   saveEditBtn.onclick = handleSaveEdit.bind(this, noteId);
 };
 
+//Save the edit to Firebase.
 function handleSaveEdit(noteId){
     const title = document.querySelector('#editTitleInput').value;
     const text = document.querySelector('#editTextInput').value;
@@ -175,23 +177,8 @@ function handleSaveEdit(noteId){
     firebase.database().ref().update(editUpdate);
 }
 
+//Close the edit modal.
 const closeEditModal = () => {
   const editNoteModal = document.querySelector('#editNoteModal');
   editNoteModal.classList.toggle('is-active');
 };
-
-/*
-
-*/
-
-//                <hr class="solid"></hr>
-//                      <p>${Date.parse(note.timestamp)}</p>
-
-// delete button that works as adding a tag archived 
-// with tag archived, the note is not actually deleted, and we can have a recycling bin to see all the "deleted notes"
-
-// have delete button actually delete ?
-// have archive button, and then place to see all archived ()
-
-// delete button -> recycling bin -> actual delete/actual gone
-// archive button -> only archived notes -> delete -> recycling bin -> actual delete
