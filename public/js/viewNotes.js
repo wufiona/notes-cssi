@@ -66,6 +66,10 @@ const card = `<div class="card">
     </div>
   </div>
   <footer class="card-footer">
+      <a id="${noteId}" href="#" class="card-footer-item"
+                 onclick="editNote('${noteId}')">
+                 Edit
+              </a>
     <a id="${noteId}" href="#" class="card-footer-item"
                  onclick="recycleNote('${noteId}')">
                  Delete
@@ -151,6 +155,30 @@ function viewArchived(){
   }
   document.querySelector("#app").innerHTML = cards;
 }
+
+const editNote = (noteId) => {
+  const editNoteModal = document.querySelector('#editNoteModal');
+    const noteDetails = noteData[noteId];
+    document.querySelector('#editTitleInput').value = noteDetails.title;
+    document.querySelector('#editTextInput').value = noteDetails.text;
+  editNoteModal.classList.toggle('is-active');
+  const saveEditBtn = document.querySelector('#saveEdit');
+  saveEditBtn.onclick = handleSaveEdit.bind(this, noteId);
+};
+
+function handleSaveEdit(noteId){
+    const title = document.querySelector('#editTitleInput').value;
+    const text = document.querySelector('#editTextInput').value;
+    const editUpdate = {};
+    editUpdate['/users/' + googleUserID + '/' + noteId + "/title"] = title;
+    editUpdate['/users/' + googleUserID + '/' + noteId + "/text"] = text;
+    firebase.database().ref().update(editUpdate);
+}
+
+const closeEditModal = () => {
+  const editNoteModal = document.querySelector('#editNoteModal');
+  editNoteModal.classList.toggle('is-active');
+};
 
 /*
 
