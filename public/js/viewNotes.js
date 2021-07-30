@@ -1,6 +1,7 @@
 let googleUserID;
 let noteData;
 let sortedLabels;
+let inArchive = false;
 
 window.onload = event => {
   // Firebase authentication goes here.
@@ -76,7 +77,7 @@ const card = `<div class="card">
               </a>
               <a id="${noteId}" href="#" class="card-footer-item"
                  onclick="archiveNote('${noteId}')">
-                 Archive
+                 ${note.isArchived ? "Un-archive" : "Archive"}
               </a>
   </footer>
 </div>`;
@@ -120,21 +121,19 @@ function createLabelButton(labelName) {
 //Shows all notes.
 function showAll() {
   renderDataAsHtml(noteData);
+  inArchive = false;
 }
 
 //Archive note.
 function archiveNote(noteId) {
   const archiveUpdate = {};
-  archiveUpdate['/users/' + googleUserID + '/' + noteId + "/isArchived"] = true;
+  console.log(`noteId.isarchived = ${noteData[noteId].isArchived}`)
+  archiveUpdate['/users/' + googleUserID + '/' + noteId + "/isArchived"] = !noteData[noteId].isArchived;
+  console.log(`noteId.isarchived = ${noteData[noteId].isArchived}`)
   firebase.database().ref().update(archiveUpdate);
+  inArchive ? viewArchived() : showAll();
 }
 
-//unarchive note.
-function unarchiveNote(noteId) {
-  const archiveUpdate = {};
-  archiveUpdate['/users/' + googleUserID + '/' + noteId + "/isArchived"] = false;
-  firebase.database().ref().update(archiveUpdate);
-}
 
 //Recycle note.
 function recycleNote(noteId) {
@@ -153,6 +152,7 @@ function viewArchived(){
       cards += createCard(note, noteItem);
     }
   }
+  inArchive = true;
   document.querySelector("#app").innerHTML = cards;
 }
 
